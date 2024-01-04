@@ -1,10 +1,4 @@
-NATIVE_CC=gcc
-
-ifndef CROSS_COMPILER
-	override COMPILER=$(NATIVE_CC)
-else
-	override COMPILER=CROSS_COMPILER 
-endif
+COMPILER:=$(CROSS_COMPILER)gcc
 writer: writer.c
 	$(COMPILER) -g -Wall -o writer writer.c
 
