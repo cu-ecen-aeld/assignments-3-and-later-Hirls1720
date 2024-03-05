@@ -2,16 +2,19 @@
 # Script outline to install and build kernel.
 # Author: Siddhant Jajoo.
 
+PATH_TO_CROSS_COMPILER=/usr/local/arm-cross-compiler/install/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/bin/
+
 set -e
 set -u
 
-OUTDIR=/tmp/aeld
+#OUTDIR=/tmp/aeld
+OUTDIR=/home/hoang/Desktop/study/linux/kernel_source/
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
 ARCH=arm64
-CROSS_COMPILE=aarch64-none-linux-gnu-
+CROSS_COMPILE="$PATH_TO_CROSS_COMPILER"aarch64-none-linux-gnu-
 
 if [ $# -lt 1 ]
 then
@@ -48,6 +51,9 @@ then
 fi
 
 # TODO: Create necessary base directories
+mkdir -p bin dev etc home lib lib64 proc sbin sys tmp usr var
+mkdir -p usr/bin usr/lib usr/sbin
+mkdir -p var/log
 
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
