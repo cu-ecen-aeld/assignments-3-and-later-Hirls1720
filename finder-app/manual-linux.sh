@@ -96,12 +96,13 @@ sudo mknod -m 666 dev/null c 1 3
 sudo mknod -m 666 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
+cd ${FINDER_APP_DIR}
 make clean
 make CROSS_COMPILE=${CROSS_COMPILE}
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-
+cp -a . ${OUTDIR}/rootfs/home 
 # TODO: Chown the root directory
 
 # TODO: Create initramfs.cpio.gz
