@@ -104,5 +104,9 @@ make CROSS_COMPILE=${CROSS_COMPILE}
 # on the target rootfs
 cp -a . ${OUTDIR}/rootfs/home 
 # TODO: Chown the root directory
-
+sudo chown -R root:root ${OUTDIR}/rootfs
 # TODO: Create initramfs.cpio.gz
+cd ${OUTDIR}/rootfs
+find . | cpio -H newc -ov --owner root:root > ${OUTDIR}/initramfs.cpio
+cd ${OUTDIR}
+gzip -f initramfs.cpio
