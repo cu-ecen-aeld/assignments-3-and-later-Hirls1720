@@ -7,8 +7,8 @@ PATH_TO_CROSS_COMPILER=/usr/local/arm-cross-compiler/install/gcc-arm-10.2-2020.1
 set -e
 set -u
 
-#OUTDIR=/tmp/aeld
-OUTDIR=/home/hoang/Desktop/study/linux/kernel_source/
+OUTDIR=/tmp/aeld
+#OUTDIR=/home/hoang/Desktop/study/linux/kernel_source/
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
