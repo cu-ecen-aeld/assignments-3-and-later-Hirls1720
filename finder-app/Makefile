@@ -4,6 +4,9 @@ ifeq ($(CROSS_COMPILE),)
 else
     COMPILER := $(CROSS_COMPILE)gcc
 endif
+
+all: writer
+
 writer: writer.c
 	$(COMPILER) -g -Wall -o writer writer.c
 
