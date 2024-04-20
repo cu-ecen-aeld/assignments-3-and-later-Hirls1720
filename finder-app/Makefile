@@ -8,10 +8,12 @@ else
     COMPILER := $(CROSS_COMPILE)gcc
 endif
 
+CC = $(COMPILER)
+
 all: writer
 
 writer: writer.c
-	$(COMPILER) $(CFLAGS) -o writer writer.c
+	$(CC) $(CFLAGS) -o writer writer.c
 
 clean:
 	@rm -f writer
