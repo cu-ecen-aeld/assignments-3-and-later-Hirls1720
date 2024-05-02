@@ -20,7 +20,7 @@
 
 char *writefile = "/var/tmp/aesdsocketdata";
 char *writefile_2 = "/var/tmp/aesdsocketdata_2";
-bool caught_sig = false;
+volatile bool caught_sig = false;
 
 static void signal_handler ( int signal_number )
 {
@@ -73,9 +73,30 @@ struct addrinfo hints, *res;
 int sockfd, new_fd;
 char *s = NULL;
 
-int fd,fd2;
+int fd2;
 
 char  *data_recv = NULL;
+
+void close_and_free(){
+	
+	if(sockfd > 0){
+		close(sockfd);
+	}
+	if(new_fd > 0){
+		close(new_fd);
+	}
+	if(fd2 > 0){
+		close(fd2);
+	}
+	if(s){
+		free(s);
+	}
+	if(data_recv){
+		free(data_recv);
+	}
+
+}
+
 int main(int argc, char* argv[]){
 
     openlog(NULL,0,LOG_USER);
@@ -130,6 +151,9 @@ int main(int argc, char* argv[]){
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
         if(new_fd < 0){
             printf("accept failed\n");
+	    free(data_recv);
+	    close(fd2);
+	    close(new_fd);
             close(sockfd);
             return -1;
         }
@@ -158,7 +182,7 @@ int main(int argc, char* argv[]){
                 printf("sucessfully recv \n");
                 f_len += d_read_sz;
                 printf("f_len =  %ld \n",f_len);
-                data_recv = realloc(data_recv, d_read_sz + 1);
+                data_recv = realloc(data_recv, f_len + 1);
 
                 if(!data_recv){
                 
@@ -167,12 +191,11 @@ int main(int argc, char* argv[]){
                     free(data_recv);
                     free(s);
                     close(new_fd);
-                    close(fd);
+                    close(fd2);
                     close(sockfd);
                     return -1;
                 }
                 printf("buf recv is: %s",buf);
-                printf("sz of data_recv: %ld\n", strlen(data_recv));
                 for(int i = prev_len, j = 0; j < d_read_sz; i++, j++){
                 
                     data_recv[i] = buf[j];
@@ -181,17 +204,12 @@ int main(int argc, char* argv[]){
                 prev_len = f_len;
 
                 // right now the data received from client did not have a null terminated char
-                // data_recv[f_len] = 0;
+                data_recv[f_len] = 0;
+                printf("sz of data_recv: %ld\n", strlen(data_recv));
 
                 printf("data_recv is: %s\n",data_recv);
-                // if(d_read_sz < 9)
-                //     write_re = write(fd2, data_recv, d_read_sz);
-                // else{
-                    // write_re = write(fd2, data_recv, d_read_sz);
-                    // write_re = write(fd, data_recv, d_read_sz);
 
-                // }
-                write_re = write(fd2, data_recv, f_len);
+                write_re = write(fd2, buf, d_read_sz);
 
                 printf("write return %ld\n",write_re);
                 perror("Error: \n");
@@ -205,7 +223,7 @@ int main(int argc, char* argv[]){
                         free(data_recv);
                         free(s);
                         close(new_fd);
-                        close(fd);
+                        close(fd2);
                         close(sockfd);
                         return -1;
                     }
@@ -224,13 +242,14 @@ int main(int argc, char* argv[]){
                 // free(data_recv);
                 free(s);
                 close(new_fd);
-                close(fd);
+                //close(fd);
             }
 
         }
     
     }
     printf("about to close socket\n");
+    close(fd2);
     close(sockfd);
 
     return 0;
