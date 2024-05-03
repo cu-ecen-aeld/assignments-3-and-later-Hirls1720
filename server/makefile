@@ -15,4 +15,4 @@ aesdsocket : main.c
 
 .PHONY: clean
 clean:
-	@rm aesdsocket
+	@rm -f aesdsocket
