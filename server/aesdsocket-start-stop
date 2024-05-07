@@ -5,7 +5,7 @@ ARG="-d"
 case "$1" in
     start)
         echo "Starting aesdsocket"
-        start-stop-daemon -S -n aesdsocket -a /usr/bin/simpleserver -- ${ARG}
+        start-stop-daemon -S -n aesdsocket -a /usr/bin/aesdsocket -- ${ARG}
         ;;
     stop)
         echo "Stopping aesdsocket"
